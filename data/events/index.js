@@ -14,3 +14,7 @@ const getEvents = async () => {
         return error.message
     }
 }
+
+module.exports = {
+    getEvents
+}
