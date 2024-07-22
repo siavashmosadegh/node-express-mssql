@@ -15,6 +15,21 @@ const getEvents = async () => {
     }
 }
 
+const getById = async (eventId) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('events');
+        console.log(eventId)
+        const oneEvent = await pool.request()
+                         .input('eventId', sql.Int, eventId)
+                         .query(sqlQueries.eventById);
+        return oneEvent.recordset
+    } catch (error) {
+        return error.message;
+    }
+}
+
 module.exports = {
-    getEvents
+    getEvents,
+    getById
 }
