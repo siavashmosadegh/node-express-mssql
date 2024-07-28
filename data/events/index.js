@@ -43,8 +43,38 @@ const createEvent = async (eventData) => {
     }
 }
 
+const updateEvent = async (customerID, eventData) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('events');
+        const update = await pool.request()
+                        .input('customerID', sql.Int, customerID)
+                        .input('customerFirstName', sql.NVarChar(100), eventData.customerFirstName)
+                        .input('customerLastName', sql.NVarChar(100), eventData.customerLastName)
+                        .query(sqlQueries.updateEvent);
+        return update.recordset;
+    } catch (error) {
+        return error.message
+    }
+}
+
+const deleteEvent = async (eventId) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await utils.loadSqlQueries('events');
+        const deleted = await pool.request()
+                                .input('customerID', sql.Int, eventId)
+                                .query(sqlQueries.deleteEvent);
+        return deleted.recordset;
+    } catch (error) {
+        return error.message;
+    }
+}
+
 module.exports = {
     getEvents,
     getById,
-    createEvent
+    createEvent,
+    updateEvent,
+    deleteEvent
 }
